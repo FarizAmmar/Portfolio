@@ -56,7 +56,7 @@ export default function Home() {
           <div className="grid gap-8 md:grid-cols-2 items-center px-10">
             <div className="space-y-6">
               <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
-                Hi, I'm <span className="text-primary">Fariz Ammar</span>
+                {`Hi, I'm`} <span className="text-primary">Fariz Ammar</span>
               </h1>
               <p className="text-xl text-muted-foreground">
                 A passionate full-stack developer specializing in creating
@@ -114,13 +114,13 @@ export default function Home() {
                 About Me
               </h2>
               <p className="mt-4 text-muted-foreground">
-                I'm a fullstack developer with 5 years of experience building
+                {`I'm`} a fullstack developer with 5 years of experience building
                 web applications. I specialize in React, Laravel, and Next.js,
                 creating robust and scalable solutions that combine powerful
                 backend systems with intuitive frontend experiences.
               </p>
               <p className="mt-4 text-muted-foreground">
-                When I'm not coding, you can find me hiking in the mountains,
+                When {`I'm`} not coding, you can find me hiking in the mountains,
                 reading science fiction, or experimenting with new recipes in
                 the kitchen.
               </p>
