@@ -1,77 +1,53 @@
+import AppLayout from "@/components/layouts/AppLayout";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Github, Linkedin, Mail } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col">
-      {/* Header */}
-      <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="font-bold text-xl font-sans pl-10">
-            Fariz Ammar{" "}
-          </div>
-          <nav className="hidden md:flex gap-6">
-            <Link
-              href="#about"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              About
-            </Link>
-            <Link
-              href="#skills"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Skills
-            </Link>
-            <Link
-              href="#projects"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Projects
-            </Link>
-            <Link
-              href="#contact"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Contact
-            </Link>
-          </nav>
-          
-          {/* Toogle Theme */}
-          <div className="px-10">
-            <ThemeToggle />
-          </div>
-        </div>
-      </header>
-
+    <AppLayout>
+      {/* Main Content */}
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="container py-12 md:py-24 lg:py-32">
+        <section className="container py-12 md:py-24 lg:py-28">
           <div className="grid gap-8 md:grid-cols-2 items-center px-10">
             <div className="space-y-6">
               <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
                 {`Hi, I'm`} <span className="text-primary">Fariz Ammar</span>
               </h1>
               <p className="text-xl text-muted-foreground">
-                A passionate full-stack developer specializing in creating
-                beautiful and functional web experiences.
+                A passionate and detail-oriented full-stack developer with a
+                strong focus on crafting visually stunning, user-centric, and
+                high-performance web applications. Experienced in both front-end
+                and back-end development, I thrive on turning complex problems
+                into elegant, scalable, and maintainable solutions that deliver
+                real value to users and businesses alike.
               </p>
               <div className="flex gap-4">
-                <Button>
+                <Button
+                  className="pointer"
+                  style={{
+                    cursor: "pointer",
+                  }}
+                >
                   Contact Me
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-                <Button variant="outline">View Projects</Button>
+                <Button
+                  variant="outline"
+                  style={{
+                    cursor: "pointer",
+                  }}
+                >
+                  View Projects
+                </Button>
               </div>
               <div className="flex gap-4">
                 <Link
-                  href="https://github.com"
+                  href="https://github.com/FarizAmmar"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -84,7 +60,7 @@ export default function Home() {
                 >
                   <Linkedin className="h-6 w-6 text-muted-foreground hover:text-foreground transition-colors" />
                 </Link>
-                <Link href="mailto:contact@example.com">
+                <Link href="mailto:f.ammarsyq11@outlook.com">
                   <Mail className="h-6 w-6 text-muted-foreground hover:text-foreground transition-colors" />
                 </Link>
               </div>
@@ -106,7 +82,7 @@ export default function Home() {
         {/* About Section */}
         <section
           id="about"
-          className="container py-12 md:py-24 lg:py-32 border-t"
+          className="container p-8 md:p-24 lg:p-32 border-t"
         >
           <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-2 items-center">
             <div>
@@ -114,15 +90,15 @@ export default function Home() {
                 About Me
               </h2>
               <p className="mt-4 text-muted-foreground">
-                {`I'm`} a fullstack developer with 5 years of experience building
-                web applications. I specialize in React, Laravel, and Next.js,
-                creating robust and scalable solutions that combine powerful
-                backend systems with intuitive frontend experiences.
+                {`I'm`} a fullstack developer with 5 years of experience
+                building web applications. I specialize in React, Laravel, and
+                Next.js, creating robust and scalable solutions that combine
+                powerful backend systems with intuitive frontend experiences.
               </p>
               <p className="mt-4 text-muted-foreground">
-                When {`I'm`} not coding, you can find me hiking in the mountains,
-                reading science fiction, or experimenting with new recipes in
-                the kitchen.
+                When {`I'm`} not coding, you can find me hiking in the
+                mountains, reading science fiction, or experimenting with new
+                recipes in the kitchen.
               </p>
             </div>
             <div className="space-y-4">
@@ -147,13 +123,13 @@ export default function Home() {
                         PT Ringkat Teknologi Muliatama
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        Fullstack Developer
+                        Fullstack Developer &middot; 2020 – 2023
                       </p>
                     </div>
                     <div>
                       <p className="font-medium">PT Tripilar Kreasi Digital</p>
                       <p className="text-sm text-muted-foreground">
-                        Fullstack Developer
+                        Fullstack Developer &middot; 2023 – 2025
                       </p>
                     </div>
                   </div>
@@ -166,7 +142,7 @@ export default function Home() {
         {/* Skills Section */}
         <section
           id="skills"
-          className="container py-12 md:py-24 lg:py-32 border-t"
+          className="container p-8 md:p-24 lg:p-32 border-t"
         >
           <div className="mx-auto max-w-5xl">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12">
@@ -188,7 +164,7 @@ export default function Home() {
                     "HTML5",
                     "CSS3",
                     "JavaScript",
-                    "Redux",
+                    "Shadcn",
                   ].map((skill) => (
                     <Card key={skill}>
                       <CardContent className="flex items-center justify-center p-6">
@@ -245,7 +221,7 @@ export default function Home() {
         {/* Projects Section */}
         <section
           id="projects"
-          className="container py-12 md:py-24 lg:py-32 border-t"
+          className="container p-8 md:p-24 lg:p-32 border-t"
         >
           <div className="mx-auto max-w-5xl">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12">
@@ -301,7 +277,7 @@ export default function Home() {
         {/* Contact Section */}
         <section
           id="contact"
-          className="container py-12 md:py-24 lg:py-32 border-t"
+          className="container p-8 md:p-24 lg:p-32 border-t"
         >
           <div className="mx-auto max-w-5xl">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12">
@@ -362,7 +338,7 @@ export default function Home() {
                     <div>
                       <h3 className="font-medium">Email</h3>
                       <p className="text-muted-foreground">
-                        contact@example.com
+                        f.ammarsyq11@outlook.com
                       </p>
                     </div>
                   </CardContent>
@@ -373,7 +349,7 @@ export default function Home() {
                     <div>
                       <h3 className="font-medium">LinkedIn</h3>
                       <p className="text-muted-foreground">
-                        linkedin.com/in/johndoe
+                        linkedin.com/in/fariz-ammar-4b2a06226
                       </p>
                     </div>
                   </CardContent>
@@ -384,7 +360,7 @@ export default function Home() {
                     <div>
                       <h3 className="font-medium">GitHub</h3>
                       <p className="text-muted-foreground">
-                        github.com/johndoe
+                        github.com/FarizAmmar
                       </p>
                     </div>
                   </CardContent>
@@ -394,34 +370,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
-      {/* Footer */}
-      <footer className="border-t py-6 md:py-8">
-        <div className="container flex flex-col items-center justify-between gap-4 md:flex-row px-10">
-          <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-            © 2025 Portfolio. All rights reserved.
-          </p>
-          <div className="flex gap-4">
-            <Link
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Github className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
-            </Link>
-            <Link
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Linkedin className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
-            </Link>
-            <Link href="mailto:contact@example.com">
-              <Mail className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
-            </Link>
-          </div>
-        </div>
-      </footer>
-    </div>
+    </AppLayout>
   );
 }
