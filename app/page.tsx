@@ -178,13 +178,11 @@ export default function Home() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {[
                     "Node.js",
-                    "Express",
-                    "MongoDB",
+                    "Mysql",
+                    "SQL Server",
                     "PostgreSQL",
-                    "GraphQL",
                     "REST API",
-                    "Firebase",
-                    "AWS",
+                    "Laravel"
                   ].map((skill) => (
                     <Card key={skill}>
                       <CardContent className="flex items-center justify-center p-6">
@@ -197,14 +195,13 @@ export default function Home() {
               <TabsContent value="tools" className="mt-6">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {[
+                    "Adobe Illustrator (AI)",
+                    "Adobe Photoshop (PS)",
                     "Git",
                     "GitHub",
                     "Docker",
                     "CI/CD",
-                    "Jest",
-                    "Figma",
                     "VS Code",
-                    "Agile",
                   ].map((skill) => (
                     <Card key={skill}>
                       <CardContent className="flex items-center justify-center p-6">
