@@ -1,372 +1,242 @@
-import AppLayout from "@/components/layouts/AppLayout";
-import Image from "next/image";
+"use client";
+
+import {Button} from "@/components/ui/button";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import Navbar from "@/components/customs/Navbar";
 import Link from "next/link";
-import { ArrowRight, Github, Linkedin, Mail } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {useEffect, useState} from "react";
+import {animate, motion, stagger} from "motion/react";
 
-export default function Home() {
-  return (
-    <AppLayout>
-      {/* Main Content */}
-      <main className="flex-1">
-        {/* Hero Section */}
-        <section className="container py-12 md:py-24 lg:py-28">
-          <div className="grid gap-8 md:grid-cols-2 items-center px-10">
-            <div className="space-y-6">
-              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
-                {`Hi, I'm`} <span className="text-primary">Fariz Ammar</span>
-              </h1>
-              <p className="text-xl text-muted-foreground">
-                A passionate and detail-oriented full-stack developer with a
-                strong focus on crafting visually stunning, user-centric, and
-                high-performance web applications. Experienced in both front-end
-                and back-end development, I thrive on turning complex problems
-                into elegant, scalable, and maintainable solutions that deliver
-                real value to users and businesses alike.
-              </p>
-              <div className="flex gap-4">
-                <Button
-                  className="pointer"
-                  style={{
-                    cursor: "pointer",
-                  }}
-                >
-                  Contact Me
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  style={{
-                    cursor: "pointer",
-                  }}
-                >
-                  View Projects
-                </Button>
-              </div>
-              <div className="flex gap-4">
-                <Link
-                  href="https://github.com/FarizAmmar"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Github className="h-6 w-6 text-muted-foreground hover:text-foreground transition-colors" />
-                </Link>
-                <Link
-                  href="https://www.linkedin.com/in/fariz-ammar-4b2a06226/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Linkedin className="h-6 w-6 text-muted-foreground hover:text-foreground transition-colors" />
-                </Link>
-                <Link href="mailto:f.ammarsyq11@outlook.com">
-                  <Mail className="h-6 w-6 text-muted-foreground hover:text-foreground transition-colors" />
-                </Link>
-              </div>
-            </div>
-            <div className="flex justify-center">
-              <div className="relative h-80 w-80 overflow-hidden rounded-full border-4 border-primary shadow-xl">
-                <Image
-                  src="/images/fariz.jpg"
-                  alt="Profile picture"
-                  fill
-                  className="object-cover"
-                  priority
-                />
-              </div>
-            </div>
-          </div>
-        </section>
+// Particles Type
+type Particle = {
+    top: number;
+    left: number;
+};
 
-        {/* About Section */}
-        <section
-          id="about"
-          className="container p-8 md:p-24 lg:p-32 border-t"
-        >
-          <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-2 items-center">
-            <div>
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                About Me
-              </h2>
-              <p className="mt-4 text-muted-foreground">
-                {`I'm`} a fullstack developer with 5 years of experience
-                building web applications. I specialize in React, Laravel, and
-                Next.js, creating robust and scalable solutions that combine
-                powerful backend systems with intuitive frontend experiences.
-              </p>
-              <p className="mt-4 text-muted-foreground">
-                When {`I'm`} not coding, you can find me hiking in the
-                mountains, reading science fiction, or experimenting with new
-                recipes in the kitchen.
-              </p>
-            </div>
-            <div className="space-y-4">
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold">Education</h3>
-                  <p className="mt-2 text-muted-foreground">
-                    Diploma in Computer Science
-                    <br />
-                    Universitas Pakuan
-                    <br />
-                    Graduated 2021
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold">Experience</h3>
-                  <div className="mt-2 space-y-3">
-                    <div>
-                      <p className="font-medium">
-                        PT Ringkat Teknologi Muliatama
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        Fullstack Developer &middot; 2020 – 2023
-                      </p>
-                    </div>
-                    <div>
-                      <p className="font-medium">PT Tripilar Kreasi Digital</p>
-                      <p className="text-sm text-muted-foreground">
-                        Fullstack Developer &middot; 2023 – 2025
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
+const AppLayout = () => {
+    return (
+        <>
+            {/* Navbar */}
+            <Navbar/>
 
-        {/* Skills Section */}
-        <section
-          id="skills"
-          className="container p-8 md:p-24 lg:p-32 border-t"
-        >
-          <div className="mx-auto max-w-5xl">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12">
-              Skills & Expertise
-            </h2>
-            <Tabs defaultValue="frontend" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="frontend">Frontend</TabsTrigger>
-                <TabsTrigger value="backend">Backend</TabsTrigger>
-                <TabsTrigger value="tools">Tools & Others</TabsTrigger>
-              </TabsList>
-              <TabsContent value="frontend" className="mt-6">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {[
-                    "React",
-                    "Next.js",
-                    "TypeScript",
-                    "Tailwind CSS",
-                    "HTML5",
-                    "CSS3",
-                    "JavaScript",
-                    "Shadcn",
-                  ].map((skill) => (
-                    <Card key={skill}>
-                      <CardContent className="flex items-center justify-center p-6">
-                        <span className="font-medium">{skill}</span>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-              <TabsContent value="backend" className="mt-6">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {[
-                    "Node.js",
-                    "Mysql",
-                    "SQL Server",
-                    "PostgreSQL",
-                    "REST API",
-                    "Laravel"
-                  ].map((skill) => (
-                    <Card key={skill}>
-                      <CardContent className="flex items-center justify-center p-6">
-                        <span className="font-medium">{skill}</span>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-              <TabsContent value="tools" className="mt-6">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {[
-                    "Adobe Illustrator (AI)",
-                    "Adobe Photoshop (PS)",
-                    "Git",
-                    "GitHub",
-                    "Docker",
-                    "CI/CD",
-                    "VS Code",
-                  ].map((skill) => (
-                    <Card key={skill}>
-                      <CardContent className="flex items-center justify-center p-6">
-                        <span className="font-medium">{skill}</span>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-            </Tabs>
-          </div>
-        </section>
+            {/* Main Content */}
+            <div className="flex flex-col space-y-24 scroll-smooth text-white bg-[#0f0f0f]">
+                {/* Hero Section */}
+                <HeroSection/>
 
-        {/* Projects Section */}
-        <section
-          id="projects"
-          className="container p-8 md:p-24 lg:p-32 border-t"
-        >
-          <div className="mx-auto max-w-5xl">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12">
-              Featured Projects
-            </h2>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  title: "E-commerce Platform",
-                  description:
-                    "A full-stack e-commerce solution with payment integration and admin dashboard.",
-                  tech: "Next.js, Stripe, MongoDB",
-                },
-                {
-                  title: "Task Management App",
-                  description:
-                    "A collaborative task management tool with real-time updates and team features.",
-                  tech: "React, Firebase, Tailwind CSS",
-                },
-                {
-                  title: "Portfolio Website",
-                  description:
-                    "A responsive portfolio website showcasing projects and skills.",
-                  tech: "Next.js, shadcn/ui, TypeScript",
-                },
-              ].map((project, index) => (
-                <Card key={index} className="overflow-hidden">
-                  <div className="aspect-video bg-muted"></div>
-                  <CardContent className="p-6">
-                    <h3 className="text-xl font-bold">{project.title}</h3>
-                    <p className="mt-2 text-muted-foreground">
-                      {project.description}
+                {/* About Section */}
+                <section id="about" className="container mx-auto px-4">
+                    <h2 className="text-3xl font-bold mb-6 text-primary">About Me</h2>
+                    <p className="text-white/80 text-lg max-w-2xl">
+                        I’m a passionate web developer with experience in building fullstack applications using React,
+                        Next.js, and Laravel.
+                        I enjoy creating clean, elegant, and functional UI/UX with a focus on performance.
                     </p>
-                    <div className="mt-4 flex items-center text-sm text-muted-foreground">
-                      <span className="font-medium">Tech: {project.tech}</span>
-                    </div>
-                    <div className="mt-4 flex gap-2">
-                      <Button variant="outline" size="sm">
-                        View Demo
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Github className="mr-2 h-4 w-4" />
-                        Code
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
+                </section>
 
-        {/* Contact Section */}
-        <section
-          id="contact"
-          className="container p-8 md:p-24 lg:p-32 border-t"
-        >
-          <div className="mx-auto max-w-5xl">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12">
-              Get In Touch
-            </h2>
-            <div className="grid gap-8 md:grid-cols-2">
-              <Card>
-                <CardContent className="p-6">
-                  <form className="space-y-4">
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="name"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        Name
-                      </label>
-                      <input
-                        id="name"
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        placeholder="Your name"
-                      />
+                {/* Skills Section */}
+                <section id="skills" className="container mx-auto px-4">
+                    <h2 className="text-3xl font-bold mb-6 text-primary">Skills</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {["React", "Next.js", "Laravel", "Tailwind CSS", "TypeScript", "Node.js", "MySQL", "Git"].map((skill) => (
+                            <Card key={skill}
+                                  className="bg-[#1f1f1f] border-none shadow-md hover:shadow-orange-400/40 transition">
+                                <CardContent className="flex items-center justify-center h-24 font-medium text-white">
+                                    {skill}
+                                </CardContent>
+                            </Card>
+                        ))}
                     </div>
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="email"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        Email
-                      </label>
-                      <input
-                        id="email"
-                        type="email"
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        placeholder="Your email"
-                      />
+                </section>
+
+                {/* Projects Section */}
+                <section id="projects" className="container mx-auto px-4">
+                    <h2 className="text-3xl font-bold mb-6 text-primary">Projects</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {[1, 2].map((project) => (
+                            <Card key={project}
+                                  className="bg-[#1f1f1f] border-none shadow-md hover:shadow-orange-500/30 transition">
+                                <CardHeader>
+                                    <CardTitle className="text-white">Project {project}</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-white/70">
+                                        Description of project {project}. Brief overview of what it does and what stack
+                                        you
+                                        used.
+                                    </p>
+                                    <Button variant="link" className="mt-4 p-0 text-primary hover:underline">
+                                        View Project →
+                                    </Button>
+                                </CardContent>
+                            </Card>
+                        ))}
                     </div>
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="message"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        Message
-                      </label>
-                      <textarea
-                        id="message"
-                        className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        placeholder="Your message"
-                      ></textarea>
-                    </div>
-                    <Button className="w-full">Send Message</Button>
-                  </form>
-                </CardContent>
-              </Card>
-              <div className="space-y-6">
-                <Card>
-                  <CardContent className="p-6 flex items-center gap-4">
-                    <Mail className="h-6 w-6 text-primary" />
-                    <div>
-                      <h3 className="font-medium">Email</h3>
-                      <p className="text-muted-foreground">
-                        f.ammarsyq11@outlook.com
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="p-6 flex items-center gap-4">
-                    <Linkedin className="h-6 w-6 text-primary" />
-                    <div>
-                      <h3 className="font-medium">LinkedIn</h3>
-                      <p className="text-muted-foreground">
-                        linkedin.com/in/fariz-ammar-4b2a06226
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="p-6 flex items-center gap-4">
-                    <Github className="h-6 w-6 text-primary" />
-                    <div>
-                      <h3 className="font-medium">GitHub</h3>
-                      <p className="text-muted-foreground">
-                        github.com/FarizAmmar
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+                </section>
+
+                {/* Contact Section */}
+                <section id="contact" className="container mx-auto px-4 pb-24">
+                    <h2 className="text-3xl font-bold mb-6 text-primary">Contact</h2>
+                    <p className="text-white/80 mb-4">
+                        Feel free to reach out for collaborations or just a friendly chat.
+                    </p>
+                    <Button size="lg" className="bg-primary hover:bg-primary text-white">
+                        Say Hello
+                    </Button>
+                </section>
             </div>
-          </div>
+        </>
+    );
+};
+
+const HeroSection = () => {
+    // State lists
+    const [particles, setParticles] = useState<Particle[]>([]);
+
+    // On Load
+    useEffect(() => {
+        // Fade + slide on mount
+        animate(
+            ".hero-fade",
+            {opacity: [0, 1], transform: ["translateY(40px)", "translateY(0px)"]},
+            {duration: 0.8, delay: stagger(0.15)}
+        );
+
+        // Particle reaction on scroll
+        const particles = document.querySelectorAll(".scroll-particle");
+        const handleScroll = () => {
+            particles.forEach((el) => {
+                const dx = (Math.random() - 0.5) * 20;
+                const dy = (Math.random() - 0.5) * 20;
+                animate(el, {transform: `translate(${dx}px, ${dy}px)`}, {duration: 0.5});
+            });
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    // Particles
+    useEffect(() => {
+        // generate posisi partikel hanya di client
+        const generated = Array.from({length: 20}, () => ({
+            top: Math.random() * 100,
+            left: Math.random() * 100,
+        }));
+        setParticles(generated);
+    }, []);
+
+    return (
+        <section
+            id="hero"
+            className="relative min-h-svh flex flex-col justify-between bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white px-6 md:px-12 py-16 overflow-hidden"
+        >
+            {/* Particles */}
+            {particles.map((p, i) => (
+                <motion.div
+                    key={i}
+                    className="absolute w-2 h-2 bg-white rounded-full blur-sm brightness-150 shadow-[0_0_10px_rgba(255,255,255,0.6)] z-0"
+                    initial={{y: 0, x: 0}}
+                    animate={{
+                        y: [0, -10, 0],
+                        x: i % 2 === 0 ? [0, 5, 0] : [0, -5, 0],
+                    }}
+                    transition={{
+                        duration: 4 + Math.random() * 2,
+                        repeat: Infinity,
+                        repeatType: 'loop',
+                        ease: 'easeInOut',
+                    }}
+                    style={{
+                        top: `${p.top}%`,
+                        left: `${p.left}%`,
+                    }}
+                />
+            ))}
+
+            {/* Background Glow */}
+            <div
+                className="absolute w-[600px] h-[600px] bg-gradient-to-tr from-pink-500 via-purple-500 to-blue-500 blur-[180px] opacity-20 top-0 -left-32 z-0"/>
+            <div
+                className="absolute w-[400px] h-[400px] bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600 blur-[160px] opacity-10 bottom-10 right-10 z-0"/>
+
+            {/* Top Hero */}
+            <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h1 className="hero-fade text-4xl md:text-6xl font-bold leading-tight text-white">
+                        Hi, I’m <span className="text-primary">Fariz Ammar</span>
+                    </h1>
+                    <p className="hero-fade mt-4 text-xl text-white/80 max-w-md">
+                        A Fullstack Developer who crafts modern web applications using{" "}
+                        <strong>React</strong>, <strong>Next.js</strong>, and <strong>Laravel</strong>.
+                    </p>
+                    <div className="hero-fade mt-6 flex gap-4 flex-wrap">
+                        <Link
+                            href="#projects"
+                            className="bg-primary font-semibold px-6 py-3 rounded-lg hover:bg-secondary hover:text-zinc-800"
+                        >
+                            View Projects
+                        </Link>
+                        <Link
+                            href="/FarizAmmar_CV.pdf"
+                            target="_blank"
+                            className="bg-white text-zinc-950 font-semibold px-6 py-3 rounded-lg hover:bg-secondary"
+                        >
+                            Download CV
+                        </Link>
+                    </div>
+                </div>
+
+                {/* Info Card */}
+                <div className="hero-fade bg-white/10 backdrop-blur-md rounded-xl p-6 space-y-4 border border-white/10">
+                    <h3 className="text-white font-semibold text-xl">Quick Info</h3>
+                    <div className="space-y-2 text-white/80 text-sm">
+                        <div className="flex justify-between">
+                            <span>Location</span>
+                            <span>Indonesia</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>Experience</span>
+                            <span>4+ Years</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>Specialty</span>
+                            <span>Fullstack Dev</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>Stack</span>
+                            <span>React + Laravel</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Bottom Cards */}
+            <div className="relative z-10 max-w-6xl mx-auto mt-16 grid md:grid-cols-3 gap-6">
+                {[
+                    {
+                        title: "Crafting Modern Interfaces",
+                        desc: "I design and develop responsive, accessible, and beautiful UIs with great user experience.",
+                    },
+                    {
+                        title: "Performance & Optimization",
+                        desc: "Always optimizing apps for speed, scalability, and maintainability.",
+                    },
+                    {
+                        title: "Reliable Collaboration",
+                        desc: "Team player who writes clean code and communicates effectively with devs, designers, and clients.",
+                    },
+                ].map((card) => (
+                    <div
+                        key={card.title}
+                        className="hero-fade bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/10 hover:shadow-xl hover:shadow-orange-400/10 transition"
+                    >
+                        <h4 className="text-white font-semibold text-lg mb-2">{card.title}</h4>
+                        <p className="text-white/70 text-sm">{card.desc}</p>
+                    </div>
+                ))}
+            </div>
         </section>
-      </main>
-    </AppLayout>
-  );
-}
+    );
+};
+
+export default AppLayout;
