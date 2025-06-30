@@ -1,37 +1,45 @@
-import { Inter } from "next/font/google";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { ThemeProvider } from "@/components/theme-provider";
+import {Poppins} from "next/font/google";
+import {SpeedInsights} from "@vercel/speed-insights/next";
+
 import "@/app/globals.css";
 import type React from "react";
-import { Analytics } from "@vercel/analytics/next";
+import {Analytics} from "@vercel/analytics/next";
+import {ThemeProvider} from "@/components/providers/theme-provider";
 
-const inter = Inter({ subsets: ["latin"] });
+interface LayoutProps {
+    children: React.ReactNode;
+}
+
+const poppins = Poppins({
+    subsets: ["latin"],
+    weight: ["400", "500", "600", "700"],
+    display: "swap",
+});
 
 export const metadata = {
-  title: "Fariz Ammar",
-  description:
-    "A professional portfolio website built with Next.js and shadcn/ui",
+    title: {
+        template: "%s | Fariz Ammar",
+        default: "Fariz Ammar",
+    },
+    description:
+        "A professional portfolio website built with Next.js and shadcn/ui",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+export default function RootLayout({children}: Readonly<LayoutProps>) {
+    return (
+        <html lang="en" suppressHydrationWarning>
+        <body className={poppins.className}>
         <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
         >
-          {children}
+            {children}
         </ThemeProvider>
-        <SpeedInsights />
-        <Analytics />
-      </body>
-    </html>
-  );
+        <SpeedInsights/>
+        <Analytics/>
+        </body>
+        </html>
+    );
 }
