@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
@@ -6,11 +6,13 @@ import Navbar from "@/components/customs/Navbar";
 import Link from "next/link";
 import {useEffect, useState} from "react";
 import {animate, motion, stagger} from "motion/react";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 
 // Particles Type
 type Particle = {
     top: number;
     left: number;
+    color: string;
 };
 
 const AppLayout = () => {
@@ -117,12 +119,30 @@ const HeroSection = () => {
 
     // Particles
     useEffect(() => {
-        // generate posisi partikel hanya di client
-        const generated = Array.from({length: 20}, () => ({
-            top: Math.random() * 100,
-            left: Math.random() * 100,
-        }));
-        setParticles(generated);
+        const colors = ["#ff6b6b", "#6bc1ff", "#a07fff", "#feca57", "#1dd1a1", "#ff9ff3", "#f368e0", "#10ac84"];
+        const minDistance = 10;
+        const newParticles: Particle[] = [];
+
+        while (newParticles.length < 20) {
+            const candidate = {
+                top: Math.random() * 100,
+                left: Math.random() * 100,
+                color: colors[Math.floor(Math.random() * colors.length)],
+            };
+
+            const isTooClose = newParticles.some((p) => {
+                const dx = p.left - candidate.left;
+                const dy = p.top - candidate.top;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                return distance < minDistance;
+            });
+
+            if (!isTooClose) {
+                newParticles.push(candidate);
+            }
+        }
+
+        setParticles(newParticles);
     }, []);
 
     return (
@@ -134,11 +154,11 @@ const HeroSection = () => {
             {particles.map((p, i) => (
                 <motion.div
                     key={i}
-                    className="absolute w-2 h-2 bg-white rounded-full blur-sm brightness-150 shadow-[0_0_10px_rgba(255,255,255,0.6)] z-0"
+                    className="absolute w-20 h-20 rounded-full blur-xl brightness-100 shadow-[0_0_12px_rgba(255,255,255,0.5)] z-0"
                     initial={{y: 0, x: 0}}
                     animate={{
-                        y: [0, -10, 0],
-                        x: i % 2 === 0 ? [0, 5, 0] : [0, -5, 0],
+                        y: [0, -12, 0],
+                        x: i % 2 === 0 ? [0, 6, 0] : [0, -6, 0],
                     }}
                     transition={{
                         duration: 4 + Math.random() * 2,
@@ -149,6 +169,7 @@ const HeroSection = () => {
                     style={{
                         top: `${p.top}%`,
                         left: `${p.left}%`,
+                        backgroundColor: p.color,
                     }}
                 />
             ))}
@@ -187,9 +208,17 @@ const HeroSection = () => {
                 </div>
 
                 {/* Info Card */}
-                <div className="hero-fade bg-white/10 backdrop-blur-md rounded-xl p-6 space-y-4 border border-white/10">
-                    <h3 className="text-white font-semibold text-xl">Quick Info</h3>
-                    <div className="space-y-2 text-white/80 text-sm">
+                <div
+                    className="hero-fade bg-white/10 backdrop-blur-md rounded-xl p-6 space-y-4 border border-white/10 text-center">
+                    {/* Avatar */}
+                    <Avatar className="mx-auto w-[100px] h-[100px] border-2 border-white brightness-125 shadow-md">
+                        <AvatarImage src="/images/fariz.jpg" alt="Fariz Ammar"/>
+                        <AvatarFallback className="text-primary">FA</AvatarFallback>
+                    </Avatar>
+
+                    <h3 className="text-white font-semibold text-xl mt-2">Quick Info</h3>
+
+                    <div className="space-y-2 text-white/80 text-sm text-left">
                         <div className="flex justify-between">
                             <span>Location</span>
                             <span>Indonesia</span>
@@ -228,7 +257,7 @@ const HeroSection = () => {
                 ].map((card) => (
                     <div
                         key={card.title}
-                        className="hero-fade bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/10 hover:shadow-xl hover:shadow-orange-400/10 transition"
+                        className="hero-fade bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/10 hover:shadow-xl hover:shadow-primary/20 transition-shadow duration-500 ease-in-out"
                     >
                         <h4 className="text-white font-semibold text-lg mb-2">{card.title}</h4>
                         <p className="text-white/70 text-sm">{card.desc}</p>
