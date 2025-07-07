@@ -13,7 +13,7 @@ import Footer from "@/components/customs/Footer";
 import {useForm} from "react-hook-form";
 import {z} from "zod/v4";
 import {zodResolver} from "@hookform/resolvers/zod";
-import axios, {AxiosError} from "axios";
+import axios from "axios";
 import Swal from "sweetalert2";
 
 // Particles Type
@@ -466,7 +466,7 @@ const ContactSection = () => {
                 title: "Success!",
                 text: "Your message has been sent!.",
             });
-        } catch (error: AxiosError) {
+        } catch (error) {
             console.error("Axios error:", error);
         }
     };
