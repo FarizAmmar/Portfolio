@@ -10,6 +10,11 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {TypeAnimation} from "react-type-animation";
 import {Github, Instagram, Linkedin} from "lucide-react";
 import Footer from "@/components/customs/Footer";
+import {useForm} from "react-hook-form";
+import {z} from "zod/v4";
+import {zodResolver} from "@hookform/resolvers/zod";
+import axios, {AxiosError} from "axios";
+import Swal from "sweetalert2";
 
 // Particles Type
 type Particle = {
@@ -17,6 +22,16 @@ type Particle = {
     left: number;
     color: string;
 };
+
+// Scheme
+const schema = z.object({
+    name: z.string().min(5, "Name must be at least 5 characters"),
+    email: z.email().min(1, "Email is required"),
+    message: z.string().min(10, "Message must be at least 10 characters"),
+})
+
+// Infer
+type FormData = z.infer<typeof schema>;
 
 // Main layout
 const AppLayout = () => {
@@ -416,6 +431,46 @@ const ProjectSection = () => {
 
 // Contact Section
 const ContactSection = () => {
+    // State List
+    // Form init
+    const form = useForm<FormData>({
+        defaultValues: {
+            name: '',
+            email: '',
+            message: '',
+        },
+        resolver: zodResolver(schema)
+    });
+
+    // Submit
+    const onSubmit = async (data: FormData) => {
+        // Show loading SweetAlert
+        Swal.fire({
+            title: "Sending...",
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        });
+
+        try {
+            const res = await axios.post("/api/send-email", data);
+
+            if (res.status !== 200) throw new Error("Gagal mengirim email");
+
+            // Sukses
+            form.reset();
+
+            Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: "Your message has been sent!.",
+            });
+        } catch (error: AxiosError) {
+            console.error("Axios error:", error);
+        }
+    };
+
     return (
         <section id="contact" className="container scroll-mt-40 mx-auto px-4 pb-24">
             <h2 className="text-3xl font-bold mb-6 text-primary text-center">Contact</h2>
@@ -426,7 +481,8 @@ const ContactSection = () => {
 
             <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
                 {/* Contact Form */}
-                <form className="space-y-6">
+                <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+                    {/* Name */}
                     <div>
                         <label className="block text-white/70 text-sm mb-1" htmlFor="name">Name</label>
                         <input
@@ -434,9 +490,14 @@ const ContactSection = () => {
                             type="text"
                             className="w-full px-4 py-2 rounded-lg bg-zinc-800 text-white placeholder:text-white/50 border border-white/10 focus:outline-none focus:ring-2 focus:ring-primary"
                             placeholder="Your Name"
-                            required
+                            {...form.register("name")}
                         />
+                        {form.formState.errors.name && (
+                            <p className="text-red-500 text-sm mt-1">{form.formState.errors.name.message}</p>
+                        )}
                     </div>
+
+                    {/* Email */}
                     <div>
                         <label className="block text-white/70 text-sm mb-1" htmlFor="email">Email</label>
                         <input
@@ -444,9 +505,14 @@ const ContactSection = () => {
                             type="email"
                             className="w-full px-4 py-2 rounded-lg bg-zinc-800 text-white placeholder:text-white/50 border border-white/10 focus:outline-none focus:ring-2 focus:ring-primary"
                             placeholder="you@example.com"
-                            required
+                            {...form.register("email")}
                         />
+                        {form.formState.errors.email && (
+                            <p className="text-red-500 text-sm mt-1">{form.formState.errors.email.message}</p>
+                        )}
                     </div>
+
+                    {/* Message */}
                     <div>
                         <label className="block text-white/70 text-sm mb-1" htmlFor="message">Message</label>
                         <textarea
@@ -454,10 +520,18 @@ const ContactSection = () => {
                             rows={5}
                             className="w-full px-4 py-2 rounded-lg bg-zinc-800 text-white placeholder:text-white/50 border border-white/10 focus:outline-none focus:ring-2 focus:ring-primary"
                             placeholder="Write your message..."
-                            required
+                            {...form.register("message")}
                         ></textarea>
+                        {form.formState.errors.message && (
+                            <p className="text-red-500 text-sm mt-1">{form.formState.errors.message.message}</p>
+                        )}
                     </div>
-                    <Button size="lg" type="submit" className="bg-primary hover:bg-primary/90 text-white">
+
+                    <Button
+                        size="lg"
+                        type="submit"
+                        className="bg-primary hover:bg-primary/90 text-white cursor-pointer"
+                    >
                         Send Message
                     </Button>
                 </form>
