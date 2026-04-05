@@ -74,7 +74,7 @@ const Navbar = () => {
                 {/* Right: Download CV */}
                 <div className="flex items-center gap-2">
                     <a
-                        href="/FarizAmmar_CV.pdf"
+                        href="/documents/CV Fariz Ammar 2026 V1.pdf"
                         target="_blank"
                         className="px-4 py-2 rounded-md text-sm font-semibold transition duration-500 ease-in-out
               bg-primary text-white
