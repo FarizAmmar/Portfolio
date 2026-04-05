@@ -15,6 +15,7 @@ import { z } from "zod/v4";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Image from "next/image";
 
 // Particles Type
 type Particle = {
@@ -455,7 +456,7 @@ const ProjectSection = () => {
               className="group bg-[#222] rounded-xl overflow-hidden cursor-pointer"
             >
               <div className="relative">
-                <img
+                <Image
                   src={p.img}
                   alt={p.title}
                   className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
