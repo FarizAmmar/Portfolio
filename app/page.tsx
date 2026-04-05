@@ -457,6 +457,8 @@ const ProjectSection = () => {
             >
               <div className="relative">
                 <Image
+                  width={300}
+                  height={300}
                   src={p.img}
                   alt={p.title}
                   className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
