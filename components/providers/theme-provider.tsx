@@ -11,6 +11,22 @@ export function ThemeProvider({
 
   React.useEffect(() => {
     setMounted(true);
+
+    // Filter false-positive error dari next-themes + Next.js 16.2
+    const originalError = console.error;
+    console.error = (...args: unknown[]) => {
+      if (
+        typeof args[0] === "string" &&
+        args[0].includes("Encountered a script tag while rendering")
+      ) {
+        return;
+      }
+      originalError(...args);
+    };
+
+    return () => {
+      console.error = originalError;
+    };
   }, []);
 
   if (!mounted) return <>{children}</>;

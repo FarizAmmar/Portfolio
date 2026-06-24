@@ -1,21 +1,45 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import Navbar from "@/components/customs/Navbar";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { animate, motion, stagger } from "motion/react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { TypeAnimation } from "react-type-animation";
-import { Github, Instagram, Linkedin } from "lucide-react";
 import Footer from "@/components/customs/Footer";
+import Link from "next/link";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { animate, motion, stagger, AnimatePresence } from "motion/react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useForm } from "react-hook-form";
 import { z } from "zod/v4";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Swal from "sweetalert2";
-import Image from "next/image";
+import {
+  Github,
+  Instagram,
+  Linkedin,
+  Mail,
+  MapPin,
+  Clock,
+  Rocket,
+  Code2,
+  Users,
+  Trophy,
+  Quote,
+  Send,
+} from "lucide-react";
+import {
+  SiReact,
+  SiNextdotjs,
+  SiTypescript,
+  SiTailwindcss,
+  SiLaravel,
+  SiPhp,
+  SiMysql,
+  SiGit,
+  SiDocker,
+  SiWordpress,
+  SiFigma,
+} from "react-icons/si";
 
 // Particles Type
 type Particle = {
@@ -42,18 +66,24 @@ const AppLayout = () => {
       <Navbar />
 
       {/* Main Content */}
-      <div className="flex flex-col space-y-24 scroll-smooth">
+      <div className="flex flex-col scroll-smooth bg-[#0a0a0f]">
         {/* Hero Section */}
         <HeroSection />
 
-        {/* About Section */}
-        <AboutSection />
+        {/* Stats Section */}
+        <StatsSection />
 
-        {/* Skills Section */}
-        <SkillSection />
+        {/* Tech Stack Section */}
+        <TechStackSection />
 
         {/* Projects Section */}
         <ProjectSection />
+
+        {/* Experience Section */}
+        <ExperienceSection />
+
+        {/* CTA Section */}
+        <CTASection />
 
         {/* Contact Section */}
         <ContactSection />
@@ -65,22 +95,25 @@ const AppLayout = () => {
   );
 };
 
+// ---------------------------------------------------------------------------
 // Hero Section
+// ---------------------------------------------------------------------------
 const HeroSection = () => {
   const [particles, setParticles] = useState<Particle[]>([]);
+
   useEffect(() => {
     animate(
       ".hero-fade",
       { opacity: [0, 1], transform: ["translateY(40px)", "translateY(0px)"] },
       { duration: 0.8, delay: stagger(0.15) },
     );
-    const particles = document.querySelectorAll(".scroll-particle");
+    const particleEls = document.querySelectorAll(".scroll-particle");
     let lastScroll = 0;
     const handleScroll = () => {
       const now = Date.now();
       if (now - lastScroll < 100) return;
       lastScroll = now;
-      particles.forEach((el) => {
+      particleEls.forEach((el) => {
         const dx = (Math.random() - 0.5) * 10;
         const dy = (Math.random() - 0.5) * 10;
         animate(
@@ -93,6 +126,7 @@ const HeroSection = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   useEffect(() => {
     if (typeof window !== "undefined" && window.innerWidth <= 768) return;
     const colors = [
@@ -115,17 +149,34 @@ const HeroSection = () => {
     }
     setParticles(newParticles);
   }, []);
+
+  const socials = [
+    { icon: Github, href: "https://github.com/FarizAmmar" },
+    {
+      icon: Linkedin,
+      href: "https://www.linkedin.com/in/fariz-ammar-4b2a06226/",
+    },
+    { icon: Instagram, href: "https://www.instagram.com/f.ammarsyq/" },
+    { icon: Mail, href: "mailto:f.ammarsyq11@gmail.com" },
+  ];
+
+  const stats = [
+    { icon: Rocket, value: "5+", label: "Years Experience" },
+    { icon: Code2, value: "20+", label: "Projects Completed" },
+    { icon: Users, value: "10+", label: "Happy Clients" },
+    { icon: Trophy, value: "100%", label: "Client Satisfaction" },
+  ];
+
   return (
     <section
       id="home"
       className="relative min-h-svh flex flex-col justify-center bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white px-6 md:px-12 py-20 overflow-hidden pt-28"
     >
-      {" "}
-      {/* Particles */}{" "}
+      {/* Particles */}
       {particles.map((p, i) => (
         <motion.div
           key={i}
-          className="absolute w-24 h-24 rounded-full blur-2xl brightness-100 shadow-[0_0_18px_rgba(255,255,255,0.5)] z-0"
+          className="scroll-particle absolute w-24 h-24 rounded-full blur-2xl brightness-100 shadow-[0_0_18px_rgba(255,255,255,0.5)] z-0"
           initial={{ y: 0, x: 0 }}
           animate={{ y: [0, -14, 0], x: i % 2 === 0 ? [0, 8, 0] : [0, -8, 0] }}
           transition={{
@@ -140,356 +191,612 @@ const HeroSection = () => {
             backgroundColor: p.color,
           }}
         />
-      ))}{" "}
-      {/* Glow Background */}{" "}
-      <div className="absolute w-[600px] h-[600px] bg-gradient-to-tr from-pink-500 via-purple-500 to-blue-500 blur-[180px] opacity-20 top-0 -left-32 z-0" />{" "}
-      <div className="absolute w-[400px] h-[400px] bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600 blur-[160px] opacity-10 bottom-10 right-10 z-0" />{" "}
-      {/* Main Hero */}{" "}
+      ))}
+
+      {/* Glow Background */}
+      <div className="absolute w-[600px] h-[600px] bg-gradient-to-tr from-pink-500 via-purple-500 to-blue-500 blur-[180px] opacity-20 top-0 -left-32 z-0" />
+      <div className="absolute w-[400px] h-[400px] bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600 blur-[160px] opacity-10 bottom-10 right-10 z-0" />
+
+      {/* Main Hero */}
       <div className="relative z-10 max-w-7xl mx-auto grid md:grid-cols-[1.1fr_0.9fr] gap-16 items-center">
-        {" "}
-        {/* Left */}{" "}
+        {/* Left */}
         <div>
-          {" "}
+          <span className="hero-fade inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-medium mb-6">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            Available for work
+          </span>
+
           <h1 className="hero-fade text-5xl md:text-7xl leading-[1.1] font-bold text-white">
-            {" "}
-            Hi, I’m <span className="text-white">Fariz Ammar</span>{" "}
-          </h1>{" "}
+            Hi, I’m <span className="text-primary">Fariz Ammar</span>
+          </h1>
+
           <p className="hero-fade mt-6 text-xl md:text-2xl text-white/80 max-w-xl leading-relaxed">
-            {" "}
-            A Fullstack Developer who crafts modern web applications using{" "}
-            <strong>React</strong>, <strong>Next.js</strong>, and{" "}
-            <strong>Laravel</strong>.{" "}
-          </p>{" "}
-          <div className="hero-fade mt-8 flex flex-wrap">
-            {" "}
+            Fullstack Developer who builds{" "}
+            <span className="text-primary font-semibold">modern</span>,{" "}
+            <span className="text-pink-400 font-semibold">fast</span>, and{" "}
+            <span className="text-blue-400 font-semibold">scalable</span> web
+            applications.
+          </p>
+
+          <p className="hero-fade mt-4 text-white/60 max-w-xl leading-relaxed">
+            I specialize in building exceptional digital experiences using
+            React, Next.js, Laravel, and modern technologies.
+          </p>
+
+          <div className="hero-fade mt-8 flex flex-wrap gap-4">
             <Link
               href="#projects"
-              className="bg-primary font-semibold px-6 py-3 rounded-xl hover:bg-secondary-foreground hover:text-zinc-800 transition duration-500 ease-in-out shadow-lg"
+              className="bg-primary font-semibold px-6 py-3 rounded-xl hover:bg-primary/90 transition duration-500 ease-in-out shadow-lg shadow-primary/30 inline-flex items-center gap-2"
             >
-              {" "}
-              View Projects{" "}
-            </Link>{" "}
-          </div>{" "}
-        </div>{" "}
-        {/* Right Card */}{" "}
-        <div className="hero-fade bg-white/10 backdrop-blur-xl rounded-2xl p-8 space-y-6 border border-white/10 text-center shadow-2xl">
-          {" "}
-          <Avatar className="mx-auto w-[140px] h-[140px] border-2 border-white shadow-xl">
-            {" "}
-            <AvatarImage
-              src="/images/fariz-profile.jpg"
-              alt="Fariz Ammar"
-              className="w-full h-full object-cover object-center"
-            />{" "}
-            <AvatarFallback className="text-primary">FA</AvatarFallback>{" "}
-          </Avatar>{" "}
-          <h3 className="text-white font-semibold text-2xl">Quick Info</h3>{" "}
-          <div className="space-y-3 text-white/80 text-base text-left">
-            {" "}
-            <div className="flex justify-between">
-              {" "}
-              <span>Location</span> <span>Indonesia</span>{" "}
-            </div>{" "}
-            <div className="flex justify-between">
-              {" "}
-              <span>Experience</span> <span>4+ Years</span>{" "}
-            </div>{" "}
-            <div className="flex justify-between">
-              {" "}
-              <span>Specialty</span> <span>Fullstack Dev</span>{" "}
-            </div>{" "}
-            <div className="flex justify-between">
-              {" "}
-              <span>Stack</span> <span>React + Laravel</span>{" "}
-            </div>{" "}
-          </div>{" "}
-        </div>{" "}
-      </div>{" "}
-      {/* Bottom Cards */}{" "}
-      <div className="relative z-10 max-w-7xl mx-auto mt-20 grid md:grid-cols-3 gap-6">
-        {" "}
-        {[
-          {
-            title: "Crafting Modern Interfaces",
-            desc: "I design and develop responsive, accessible, and beautiful UIs with great user experience.",
-          },
-          {
-            title: "Performance & Optimization",
-            desc: "Always optimizing apps for speed, scalability, and maintainability.",
-          },
-          {
-            title: "Reliable Collaboration",
-            desc: "Team player who writes clean code and communicates effectively with devs, designers, and clients.",
-          },
-        ].map((card) => (
+              View My Work →
+            </Link>
+            <Link
+              href="#contact"
+              className="border border-white/20 font-semibold px-6 py-3 rounded-xl hover:bg-white/10 transition duration-500 ease-in-out inline-flex items-center gap-2"
+            >
+              Contact Me <Send className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="hero-fade mt-8 flex items-center gap-4">
+            <span className="text-white/50 text-sm">Let’s connect</span>
+            <div className="flex gap-3">
+              {socials.map(({ icon: Icon, href }, i) => (
+                <a
+                  key={i}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 border border-white/10 hover:bg-primary hover:border-primary transition"
+                >
+                  <Icon className="w-4 h-4" />
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Card */}
+        <div className="hero-fade relative">
+          {/* Glow di belakang card */}
+          <div className="absolute -inset-2 bg-gradient-to-br from-primary/40 via-violet-500/30 to-blue-500/40 rounded-2xl blur-2xl opacity-70 animate-pulse" />
+
+          {/* Card-nya sendiri */}
+          <div className="relative bg-white/10 backdrop-blur-xl rounded-2xl p-8 space-y-6 border border-white/10 text-center shadow-2xl shadow-primary/20">
+            <div className="relative inline-block">
+              <Avatar className="mx-auto w-[140px] h-[140px] border-2 border-white shadow-xl">
+                <AvatarImage
+                  src="/images/fariz-profile.jpg"
+                  alt="Fariz Ammar"
+                  className="w-full h-full object-cover object-center"
+                />
+                <AvatarFallback className="text-primary">FA</AvatarFallback>
+              </Avatar>
+              <span className="absolute bottom-1 right-1 w-5 h-5 rounded-full bg-emerald-400 border-2 border-[#1c1c2e]" />
+            </div>
+
+            <h3 className="text-white font-semibold text-2xl">Quick Info</h3>
+            <div className="space-y-3 text-white/80 text-base text-left">
+              <div className="flex justify-between">
+                <span className="text-white/50">Location</span>
+                <span>Indonesia</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-white/50">Experience</span>
+                <span>5+ Years</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-white/50">Speciality</span>
+                <span>Fullstack Web Developer</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-white/50">Stack</span>
+                <span>React • Laravel • Next.js</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Stat cards under hero (kept here for visual continuity with the design) */}
+      <div className="relative z-10 max-w-7xl mx-auto mt-20 grid grid-cols-2 md:grid-cols-4 gap-6">
+        {stats.map((s) => (
           <div
-            key={card.title}
-            className="hero-fade bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/10 hover:shadow-xl hover:shadow-primary/20 transition-all duration-500"
+            key={s.label}
+            className="hero-fade bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 text-center hover:border-primary/40 transition-all duration-500"
           >
-            {" "}
-            <h4 className="text-white font-semibold text-xl mb-2">
-              {" "}
-              {card.title}{" "}
-            </h4>{" "}
-            <p className="text-white/70 text-base leading-relaxed">
-              {" "}
-              {card.desc}{" "}
-            </p>{" "}
+            <s.icon className="w-6 h-6 text-primary mx-auto mb-3" />
+            <p className="text-3xl font-bold text-white">{s.value}</p>
+            <p className="text-white/60 text-sm mt-1">{s.label}</p>
           </div>
-        ))}{" "}
-      </div>{" "}
-    </section>
-  );
-};
-
-// About Section
-const AboutSection = () => {
-  return (
-    <section
-      id="about"
-      className="relative scroll-mt-16 py-10 px-6 md:px-8 max-w-6xl mx-auto"
-    >
-      <motion.h2
-        className="text-4xl md:text-5xl font-extrabold text-center mb-8 text-zinc-800 dark:text-white"
-        initial={{ opacity: 0, y: -30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        viewport={{ once: true }}
-      >
-        About Me
-      </motion.h2>
-
-      <TypeAnimation
-        className="text-center text-lg md:text-xl leading-relaxed max-w-3xl mx-auto text-zinc-700 dark:text-zinc-300 mb-16"
-        sequence={[
-          "I'm a passionate fullstack web developer focused on building interactive, scalable, and user-friendly applications using React, Laravel, and modern web technologies.",
-        ]}
-        wrapper="p"
-        speed={60}
-        repeat={0}
-      />
-
-      <div className="grid md:grid-cols-2 gap-12">
-        {/* Education Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-          viewport={{ once: true }}
-        >
-          <h3 className="text-2xl font-semibold mb-4 text-primary dark:text-teal-400">
-            🎓 Education
-          </h3>
-          <div className="space-y-5 text-zinc-700 dark:text-zinc-300">
-            <div>
-              <p className="text-lg font-medium">
-                Diploma – Computer Engineering
-              </p>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                Universitas Pakuan, 2021
-              </p>
-            </div>
-            <div>
-              <p className="text-lg font-medium">
-                High School – Network Engineering
-              </p>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                SMK Taruna Terpadu, 2018
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Experience Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
-          viewport={{ once: true }}
-        >
-          <h3 className="text-2xl font-semibold mb-4 text-primary dark:text-teal-400">
-            💼 Work Experience
-          </h3>
-          <div className="space-y-5 text-zinc-700 dark:text-zinc-300">
-            <div>
-              <p className="text-lg font-medium">
-                Fullstack Developer – PT Tripilar Digital Kreasi
-              </p>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                2023 – Present
-              </p>
-              <p className="text-sm mt-1">
-                Developing scalable web apps with Laravel, MySQL, and React.
-                Collaborating with UI/UX to deliver seamless user experiences.
-              </p>
-            </div>
-            <div>
-              <p className="text-lg font-medium">
-                Fullstack Developer – Ringkat Teknologi Muliautama
-              </p>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                2021 – 2023
-              </p>
-              <p className="text-sm mt-1">
-                Built internal tools with C# & SQL Server, optimized enterprise
-                apps and maintained smooth back-office workflows.
-              </p>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-// Skill Section
-const SkillSection = () => {
-  // Skill List
-  const skillCategories: Record<string, string[]> = {
-    Frontend: [
-      "React",
-      "Next.js",
-      "Tailwind CSS",
-      "TypeScript",
-      "Bootstrap",
-      "Shadcn",
-      "WordPress (CMS)",
-      "Elementor",
-    ],
-    Backend: ["Laravel", "Node.js", "MySQL", "PostgreSQL"],
-    Tools: ["Git"],
-  };
-
-  const tabs = Object.keys(skillCategories);
-
-  // State List
-  const [activeTab, setActiveTab] = useState(tabs[0]);
-
-  return (
-    <section id="skills" className="container scroll-mt-16 mx-auto px-4 py-10">
-      <motion.h2
-        className="text-3xl font-bold mb-8 text-primary text-center"
-        initial={{ opacity: 0, scale: 0.8 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, ease: "easeInOut" }}
-        viewport={{ once: true, amount: 0.5 }}
-      >
-        Skills
-      </motion.h2>
-
-      {/* Tabs */}
-      <div className="flex justify-center gap-4 mb-10 flex-wrap">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 rounded-full border cursor-pointer ${
-              activeTab === tab
-                ? "bg-primary text-white border-primary"
-                : "bg-white/10 border-white/20 text-white hover:bg-primary/20"
-            } transition-all`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      {/* Skill Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-        {skillCategories[activeTab].map((skill, i) => (
-          <motion.div
-            key={skill}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05, duration: 0.4 }}
-            viewport={{ once: true }}
-          >
-            <Card className="bg-black/40 backdrop-blur-md border border-white/10 rounded-xl hover:shadow-md hover:shadow-primary/30 hover:scale-[1.05] transition-all duration-300">
-              <CardContent className="flex items-center justify-center h-24 font-semibold text-white text-lg text-center px-2">
-                {skill}
-              </CardContent>
-            </Card>
-          </motion.div>
         ))}
       </div>
     </section>
   );
 };
 
-// Projects Section
-const ProjectSection = () => {
-  // Project List
-  const projects = [
-    {
-      id: 1,
-      title: "Galadakara",
-      desc: "A company profile website built with WordPress and Elementor for an event organizing company. It showcases their services, portfolio, and contact information in a modern and responsive design.",
-      img: "/projects/galadakara.png",
-      href: "https://galadakara.id/",
-    },
-    {
-      id: 2,
-      title: "Sudah Digital",
-      desc: "A web-based CRM-like financial management system designed to help companies manage sales processes and client transactions. Built with React and Laravel, it features e-commerce-style interfaces tailored for business operations.",
-      img: "/projects/sudahdigital.png",
-      href: "https://sudahdigital.com/",
-    },
+// ---------------------------------------------------------------------------
+// Stats Section (anchor target for "About")
+// ---------------------------------------------------------------------------
+const StatsSection = () => {
+  // The hero already renders the stat cards for visual continuity with the
+  // reference design — this empty, anchorable section just gives the
+  // navbar's "About" link a target to scroll to.
+  return <div id="about" className="scroll-mt-24" />;
+};
+
+// ---------------------------------------------------------------------------
+// Tech Stack Section
+// ---------------------------------------------------------------------------
+const TechStackSection = () => {
+  const techStack: { name: string; icon: React.ElementType; color: string }[] = [
+    { name: "React", icon: SiReact, color: "#61DAFB" },
+    { name: "Next.js", icon: SiNextdotjs, color: "#FFFFFF" },
+    { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
+    { name: "Tailwind CSS", icon: SiTailwindcss, color: "#38BDF8" },
+    { name: "Laravel", icon: SiLaravel, color: "#FF2D20" },
+    { name: "PHP", icon: SiPhp, color: "#777BB4" },
+    { name: "MySQL", icon: SiMysql, color: "#4479A1" },
+    { name: "Git", icon: SiGit, color: "#F05032" },
+    { name: "Docker", icon: SiDocker, color: "#2496ED" },
+    { name: "WordPress", icon: SiWordpress, color: "#21759B" },
+    { name: "Figma", icon: SiFigma, color: "#F24E1E" },
+    { name: "VS Code", icon: Code2, color: "#3DA5F4" },
   ];
 
   return (
-    <section
-      id="projects"
-      className="relative scroll-mt-16 py-16 bg-gradient-to-b from-[#1b1b1b] to-[#111]"
-    >
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-8 text-primary text-center">
-          Projects
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((p, i) => (
+    <section id="skills" className="relative scroll-mt-24 py-16 px-6 md:px-12">
+      <div className="max-w-6xl mx-auto">
+        <motion.h2
+          className="text-3xl md:text-4xl font-bold text-white mb-3 flex items-center gap-2"
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          Tech Stack <span className="w-2 h-2 rounded-full bg-primary" />
+        </motion.h2>
+        <p className="text-white/60 max-w-xl mb-8">
+          Technologies and tools I use to bring ideas to life and build
+          powerful digital solutions.
+        </p>
+
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
+          {techStack.map((tech, i) => (
             <motion.div
-              key={p.id}
+              key={tech.name}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
+              transition={{ delay: i * 0.04, duration: 0.4 }}
               viewport={{ once: true }}
-              className="group bg-[#222] rounded-xl overflow-hidden cursor-pointer"
+              className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-3 hover:border-primary/40 hover:bg-white/10 transition-all"
             >
-              <div className="relative">
-                <Image
-                  width={300}
-                  height={300}
-                  src={p.img}
-                  alt={p.title}
-                  className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  {p.title}
-                </h3>
-                <p className="text-white/70">{p.desc}</p>
-                <Link
-                  href={p.href}
-                  className="inline-block mt-4 text-primary font-medium group-hover:underline"
-                  target={"_blank"}
-                >
-                  View Project →
-                </Link>
-              </div>
+              <tech.icon
+                className="w-5 h-5 shrink-0"
+                style={{ color: tech.color }}
+              />
+              <span className="text-white text-sm font-medium truncate">
+                {tech.name}
+              </span>
             </motion.div>
           ))}
+        </div>
+
+        <div className="mt-8">
+          <Button
+            variant="outline"
+            className="border-white/20 text-white hover:bg-white/10 bg-transparent"
+          >
+            View All Skills →
+          </Button>
         </div>
       </div>
     </section>
   );
 };
 
+// ---------------------------------------------------------------------------
+// Projects Section
+// ---------------------------------------------------------------------------
+type Project = {
+  id: number;
+  title: string;
+  desc: string;
+  img?: string;
+  href: string;
+  tags: string[];
+  featured?: boolean;
+};
+
+const projects: Project[] = [
+  {
+    id: 1,
+    title: "Sudah Digital",
+    desc: "A web-based CRM-like financial management system designed to help companies manage sales processes and client transactions.",
+    img: "/projects/sudahdigital.png",
+    href: "https://sudahdigital.com/",
+    tags: ["Laravel", "MySQL", "React", "Tailwind CSS"],
+    featured: true,
+  },
+  {
+    id: 2,
+    title: "Galadakara",
+    desc: "Company profile website for a corporate event organizer.",
+    img: "/projects/galadakara.png",
+    href: "https://galadakara.id/",
+    tags: ["WordPress", "PHP", "JavaScript"],
+  },
+  {
+    id: 3,
+    title: "E-Commerce Dashboard",
+    desc: "Admin dashboard for managing products, orders, customers, and analytics.",
+    href: "#",
+    tags: ["Next.js", "TypeScript", "Tailwind CSS"],
+  },
+  {
+    id: 4,
+    title: "Tech Blog Platform",
+    desc: "Blog platform with authentication, markdown editor, and dynamic content.",
+    href: "#",
+    tags: ["Next.js", "MongoDB", "Tailwind CSS"],
+  },
+];
+
+const ProjectSection = () => {
+  const featured = projects.find((p) => p.featured) ?? projects[0];
+  const rest = projects.filter((p) => p.id !== featured.id);
+  const [page, setPage] = useState(0);
+  const perPage = 3;
+  const pages = Math.max(1, Math.ceil(rest.length / perPage));
+  const visible = rest.slice(page * perPage, page * perPage + perPage);
+
+  return (
+    <section
+      id="projects"
+      className="relative scroll-mt-24 py-16 px-6 md:px-12 bg-gradient-to-b from-transparent to-[#0d0d14]"
+    >
+      <div className="max-w-6xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-white flex items-center gap-2">
+            Selected Projects{" "}
+            <span className="w-2 h-2 rounded-full bg-primary" />
+          </h2>
+          <Link
+            href="#projects"
+            className="text-primary text-sm font-medium hover:underline hidden sm:block"
+          >
+            View All Projects →
+          </Link>
+        </div>
+
+        {/* Featured Project */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="grid md:grid-cols-2 gap-8 items-center bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 mb-8"
+        >
+          <div className="relative rounded-xl overflow-hidden bg-black/30 aspect-video">
+            {featured.img ? (
+              <Image
+                src={featured.img}
+                alt={featured.title}
+                fill
+                className="object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-white/30 text-sm">
+                {featured.title}
+              </div>
+            )}
+          </div>
+          <div>
+            <span className="text-primary text-xs font-bold tracking-wider uppercase">
+              Featured Project
+            </span>
+            <h3 className="text-2xl font-bold text-white mt-2 mb-3">
+              {featured.title}
+            </h3>
+            <p className="text-white/70 mb-4">{featured.desc}</p>
+            <div className="flex flex-wrap gap-2 mb-6">
+              {featured.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="text-xs px-3 py-1 rounded-full bg-white/10 text-white/70 border border-white/10"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href={featured.href}
+                target="_blank"
+                className="bg-primary text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-primary/90 transition inline-flex items-center gap-2"
+              >
+                Live Demo <Send className="w-4 h-4" />
+              </Link>
+              <Link
+                href={featured.href}
+                target="_blank"
+                className="border border-white/20 text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-white/10 transition"
+              >
+                View Case Study →
+              </Link>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Project Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <AnimatePresence mode="wait">
+            {visible.map((p, i) => (
+              <motion.div
+                key={p.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: i * 0.1 }}
+                viewport={{ once: true }}
+                className="group bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:border-primary/40 transition"
+              >
+                <div className="relative h-40 bg-black/30">
+                  {p.img ? (
+                    <Image
+                      src={p.img}
+                      alt={p.title}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-white/30 text-sm">
+                      {p.title}
+                    </div>
+                  )}
+                </div>
+                <div className="p-5">
+                  <h3 className="text-white font-semibold mb-1.5">
+                    {p.title}
+                  </h3>
+                  <p className="text-white/60 text-sm mb-3 line-clamp-2">
+                    {p.desc}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5 mb-3">
+                    {p.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-[11px] px-2 py-0.5 rounded-full bg-white/10 text-white/60"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <Link
+                    href={p.href}
+                    target="_blank"
+                    className="text-primary text-sm font-medium hover:underline"
+                  >
+                    View Project →
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+
+        {/* Pagination dots */}
+        {pages > 1 && (
+          <div className="flex justify-center gap-2 mt-8">
+            {Array.from({ length: pages }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setPage(i)}
+                aria-label={`Go to project page ${i + 1}`}
+                className={`h-2 rounded-full transition-all cursor-pointer ${i === page ? "w-6 bg-primary" : "w-2 bg-white/20"
+                  }`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};
+
+// ---------------------------------------------------------------------------
+// Experience Section
+// ---------------------------------------------------------------------------
+const experiences = [
+  {
+    period: "2023 – Present",
+    role: "Fullstack Developer",
+    company: "PT Tripilar Digital Kreasi",
+    desc: "Developing scalable web applications using Laravel, MySQL, and React. Collaborating with UI/UX to deliver seamless user experiences.",
+    tags: ["Laravel", "React", "MySQL", "REST API", "Git"],
+    current: true,
+  },
+  {
+    period: "2022 – 2023",
+    role: "Fullstack Developer",
+    company: "Ringkat Teknologi Muliautama",
+    desc: "Built internal tools with C# & SQL Server, optimized enterprise apps and maintained smooth back-office workflows.",
+    tags: ["C#", "SQL Server", "ASP.NET", "JavaScript"],
+  },
+  {
+    period: "2021 – 2022",
+    role: "Junior Web Developer",
+    company: "Freelance",
+    desc: "Built company websites, landing pages, and custom solutions for various clients.",
+    tags: ["WordPress", "PHP", "HTML", "CSS", "JavaScript"],
+  },
+];
+
+const testimonials = [
+  {
+    quote:
+      "Fariz is a dedicated developer who consistently delivers high-quality work. He's proactive, communicates well, and always meets deadlines.",
+    name: "Client / Team Lead",
+  },
+  {
+    quote:
+      "Reliable and detail-oriented — Fariz turned our requirements into a polished product faster than we expected.",
+    name: "Project Manager",
+  },
+  {
+    quote:
+      "Great communicator and problem solver. Working with Fariz felt like having an extension of our own team.",
+    name: "Product Owner",
+  },
+];
+
+const ExperienceSection = () => {
+  const [active, setActive] = useState(0);
+
+  return (
+    <section
+      id="experience"
+      className="relative scroll-mt-24 py-16 px-6 md:px-12"
+    >
+      <div className="max-w-6xl mx-auto">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-10 flex items-center gap-2">
+          Experience <span className="w-2 h-2 rounded-full bg-primary" />
+        </h2>
+
+        <div className="grid md:grid-cols-[1.4fr_1fr] gap-10">
+          {/* Timeline */}
+          <div className="space-y-10">
+            {experiences.map((exp, i) => (
+              <motion.div
+                key={exp.role + exp.period}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                viewport={{ once: true }}
+                className="grid grid-cols-[100px_1fr] sm:grid-cols-[140px_1fr] gap-4"
+              >
+                <div className="relative">
+                  <p
+                    className={`text-sm font-medium ${exp.current ? "text-primary" : "text-white/50"
+                      }`}
+                  >
+                    {exp.period}
+                  </p>
+                  {i < experiences.length - 1 && (
+                    <span className="absolute left-0 top-6 -bottom-10 w-px bg-white/10 hidden sm:block" />
+                  )}
+                  <span
+                    className={`hidden sm:inline-block absolute -left-[7px] top-1 w-3 h-3 rounded-full border-2 ${exp.current
+                      ? "bg-primary border-primary"
+                      : "bg-transparent border-white/30"
+                      }`}
+                  />
+                </div>
+                <div>
+                  <h3 className="text-white font-semibold text-lg">
+                    {exp.role} – {exp.company}
+                  </h3>
+                  <p className="text-white/60 text-sm mt-1 mb-3">
+                    {exp.desc}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {exp.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-xs px-2.5 py-1 rounded-full bg-white/10 text-white/60"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Testimonial */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="bg-white/5 border border-white/10 rounded-2xl p-8 h-fit"
+          >
+            <Quote className="w-8 h-8 text-primary mb-4" />
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={active}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="text-white/80 leading-relaxed mb-6"
+              >
+                {testimonials[active].quote}
+              </motion.p>
+            </AnimatePresence>
+            <p className="text-white font-medium mb-4">
+              — {testimonials[active].name}
+            </p>
+            <div className="flex gap-2">
+              {testimonials.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActive(i)}
+                  aria-label={`Show testimonial ${i + 1}`}
+                  className={`h-2 rounded-full transition-all cursor-pointer ${i === active ? "w-6 bg-primary" : "w-2 bg-white/20"
+                    }`}
+                />
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ---------------------------------------------------------------------------
+// CTA Section
+// ---------------------------------------------------------------------------
+const CTASection = () => {
+  return (
+    <section className="px-6 md:px-12 py-10">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true }}
+        className="max-w-6xl mx-auto bg-gradient-to-r from-primary via-violet-600 to-indigo-600 rounded-2xl px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-6"
+      >
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
+            <Rocket className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h3 className="text-white font-bold text-xl md:text-2xl">
+              Let’s build something amazing together
+            </h3>
+            <p className="text-white/80 text-sm mt-1">
+              I’m currently available for freelance projects and full-time
+              opportunities.
+            </p>
+          </div>
+        </div>
+        <Link
+          href="#contact"
+          className="shrink-0 bg-white text-primary font-semibold px-6 py-3 rounded-xl hover:bg-white/90 transition inline-flex items-center gap-2"
+        >
+          Let’s Work Together →
+        </Link>
+      </motion.div>
+    </section>
+  );
+};
+
+// ---------------------------------------------------------------------------
 // Contact Section
+// ---------------------------------------------------------------------------
 const ContactSection = () => {
-  // State List
-  // Form init
   const form = useForm<FormData>({
     defaultValues: {
       name: "",
@@ -499,9 +806,7 @@ const ContactSection = () => {
     resolver: zodResolver(schema),
   });
 
-  // Submit
   const onSubmit = async (data: FormData) => {
-    // Show loading SweetAlert
     Swal.fire({
       title: "Sending...",
       allowOutsideClick: false,
@@ -515,7 +820,6 @@ const ContactSection = () => {
 
       if (res.status !== 200) throw new Error("Gagal mengirim email");
 
-      // Sukses
       form.reset();
 
       Swal.fire({
@@ -525,136 +829,142 @@ const ContactSection = () => {
       });
     } catch (error) {
       console.error("Axios error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Something went wrong",
+        text: "Please try again later.",
+      });
     }
   };
 
+  const contactInfo = [
+    { icon: Mail, label: "Email", value: "farizammar@gmail.com" },
+    { icon: MapPin, label: "Location", value: "Indonesia (Open to remote)" },
+    { icon: Clock, label: "Response Time", value: "Usually within 24 hours" },
+  ];
+
+  const socials = [
+    { icon: Github, label: "GitHub", href: "https://github.com/FarizAmmar" },
+    {
+      icon: Linkedin,
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/in/fariz-ammar-4b2a06226/",
+    },
+    {
+      icon: Instagram,
+      label: "Instagram",
+      href: "https://www.instagram.com/f.ammarsyq/",
+    },
+  ];
+
   return (
-    <section id="contact" className="container scroll-mt-40 mx-auto px-4 pb-24">
-      <h2 className="text-3xl font-bold mb-6 text-primary text-center">
-        Contact
-      </h2>
-      <p className="text-white/80 mb-8 text-center max-w-2xl mx-auto">
-        {"I'm"} always open to discuss projects, collaborations, or just a
-        friendly hello. Feel free to drop a message!
-      </p>
+    <section
+      id="contact"
+      className="relative scroll-mt-24 py-16 px-6 md:px-12 pb-24"
+    >
+      <div className="max-w-6xl mx-auto">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-2 flex items-center gap-2">
+          Get In Touch <span className="w-2 h-2 rounded-full bg-primary" />
+        </h2>
+        <p className="text-white/60 mb-10 max-w-xl">
+          Have a project in mind or just want to say hello? Feel free to
+          reach out!
+        </p>
 
-      <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
-        {/* Contact Form */}
-        <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-          {/* Name */}
-          <div>
-            <label className="block text-white/70 text-sm mb-1" htmlFor="name">
-              Name
-            </label>
-            <input
-              id="name"
-              type="text"
-              className="w-full px-4 py-2 rounded-lg bg-zinc-800 text-white placeholder:text-white/50 border border-white/10 focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="Your Name"
-              {...form.register("name")}
-            />
-            {form.formState.errors.name && (
-              <p className="text-red-500 text-sm mt-1">
-                {form.formState.errors.name.message}
-              </p>
-            )}
+        <div className="grid md:grid-cols-[0.9fr_1.4fr_0.9fr] gap-10">
+          {/* Contact Info */}
+          <div className="space-y-6">
+            {contactInfo.map((item) => (
+              <div key={item.label} className="flex items-start gap-3">
+                <span className="w-9 h-9 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
+                  <item.icon className="w-4 h-4 text-primary" />
+                </span>
+                <div>
+                  <p className="text-white font-medium text-sm">
+                    {item.label}
+                  </p>
+                  <p className="text-white/60 text-sm">{item.value}</p>
+                </div>
+              </div>
+            ))}
           </div>
 
-          {/* Email */}
-          <div>
-            <label className="block text-white/70 text-sm mb-1" htmlFor="email">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              className="w-full px-4 py-2 rounded-lg bg-zinc-800 text-white placeholder:text-white/50 border border-white/10 focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="you@example.com"
-              {...form.register("email")}
-            />
-            {form.formState.errors.email && (
-              <p className="text-red-500 text-sm mt-1">
-                {form.formState.errors.email.message}
-              </p>
-            )}
-          </div>
-
-          {/* Message */}
-          <div>
-            <label
-              className="block text-white/70 text-sm mb-1"
-              htmlFor="message"
-            >
-              Message
-            </label>
-            <textarea
-              id="message"
-              rows={5}
-              className="w-full px-4 py-2 rounded-lg bg-zinc-800 text-white placeholder:text-white/50 border border-white/10 focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="Write your message..."
-              {...form.register("message")}
-            ></textarea>
-            {form.formState.errors.message && (
-              <p className="text-red-500 text-sm mt-1">
-                {form.formState.errors.message.message}
-              </p>
-            )}
-          </div>
-
-          <Button
-            size="lg"
-            type="submit"
-            className="bg-primary hover:bg-primary/90 text-white cursor-pointer"
+          {/* Contact Form */}
+          <form
+            className="space-y-4 bg-white/5 border border-white/10 rounded-2xl p-6"
+            onSubmit={form.handleSubmit(onSubmit)}
           >
-            Send Message
-          </Button>
-        </form>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <input
+                  type="text"
+                  className="w-full px-4 py-2.5 rounded-lg bg-zinc-800 text-white placeholder:text-white/50 border border-white/10 focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                  placeholder="Your Name"
+                  {...form.register("name")}
+                />
+                {form.formState.errors.name && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {form.formState.errors.name.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <input
+                  type="email"
+                  className="w-full px-4 py-2.5 rounded-lg bg-zinc-800 text-white placeholder:text-white/50 border border-white/10 focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                  placeholder="Your Email"
+                  {...form.register("email")}
+                />
+                {form.formState.errors.email && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {form.formState.errors.email.message}
+                  </p>
+                )}
+              </div>
+            </div>
 
-        {/* Contact Info */}
-        <div className="text-white/80 space-y-6">
-          <div>
-            <h4 className="text-white font-semibold text-lg mb-2">Email</h4>
-            <a
-              href="mailto:f.ammarsyq11@gmail.com"
-              className="hover:underline text-primary"
+            <div>
+              <textarea
+                rows={5}
+                className="w-full px-4 py-2.5 rounded-lg bg-zinc-800 text-white placeholder:text-white/50 border border-white/10 focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                placeholder="Your Message"
+                {...form.register("message")}
+              ></textarea>
+              {form.formState.errors.message && (
+                <p className="text-red-500 text-xs mt-1">
+                  {form.formState.errors.message.message}
+                </p>
+              )}
+            </div>
+
+            <Button
+              size="lg"
+              type="submit"
+              className="w-full bg-primary hover:bg-primary/90 text-white cursor-pointer"
             >
-              f.ammarsyq11@gmail.com
-            </a>
-          </div>
+              Send Message <Send className="w-4 h-4 ml-2" />
+            </Button>
+          </form>
+
+          {/* Follow Me */}
           <div>
-            <h4 className="text-white font-semibold text-lg mb-2">Location</h4>
-            <p>Indonesia (Open to remote)</p>
-          </div>
-          <div>
-            <h4 className="text-white font-semibold text-lg mb-2">Socials</h4>
-            <div className="flex gap-4">
-              <a
-                href="https://github.com/FarizAmmar"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 hover:text-primary transition"
-              >
-                <Github className="w-5 h-5" />
-                GitHub
-              </a>
-              <a
-                href="https://www.linkedin.com/in/fariz-ammar-4b2a06226/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 hover:text-primary transition"
-              >
-                <Linkedin className="w-5 h-5" />
-                LinkedIn
-              </a>
-              <a
-                href="https://www.instagram.com/f.ammarsyq/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 hover:text-primary transition"
-              >
-                <Instagram className="w-5 h-5" />
-                Instagram
-              </a>
+            <p className="text-white font-semibold mb-1">Follow Me</p>
+            <p className="text-white/60 text-sm mb-4">
+              Let’s connect and build something great!
+            </p>
+            <div className="space-y-3">
+              {socials.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg border border-white/10 text-white/80 hover:border-primary/40 hover:text-primary transition"
+                >
+                  <s.icon className="w-4 h-4" />
+                  {s.label}
+                </a>
+              ))}
             </div>
           </div>
         </div>

@@ -1,6 +1,9 @@
-import {useEffect, useState} from "react";
+"use client";
 
-const sections = ["home", "about", "skills", "projects", "contact"];
+import { useEffect, useState } from "react";
+import { Download } from "lucide-react";
+
+const sections = ["home", "skills", "projects", "experience", "contact"];
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -21,7 +24,9 @@ const Navbar = () => {
 
                 if (visibleSections.length > 0) {
                     const topMost = visibleSections.reduce((prev, current) =>
-                        prev.boundingClientRect.top < current.boundingClientRect.top ? prev : current
+                        prev.boundingClientRect.top < current.boundingClientRect.top
+                            ? prev
+                            : current,
                     );
                     setActiveSection(topMost.target.id);
                 }
@@ -30,7 +35,7 @@ const Navbar = () => {
                 root: null,
                 rootMargin: "0px 0px -60% 0px",
                 threshold: 0.1,
-            }
+            },
         );
 
         sections.forEach((id) => {
@@ -43,17 +48,16 @@ const Navbar = () => {
 
     return (
         <div
-            className={`fixed top-0 left-0 w-full z-20 px-6 md:px-12 py-4 transition-colors duration-300 ease-in-out ${
-                isScrolled
-                    ? "bg-zinc-100/20 dark:bg-secondary/80 shadow-lg backdrop-blur"
+            className={`fixed top-0 left-0 w-full z-50 px-6 md:px-12 py-4 transition-colors duration-300 ease-in-out ${isScrolled
+                    ? "bg-[#0a0a0f]/80 shadow-lg backdrop-blur-md border-b border-white/5"
                     : "bg-transparent"
-            }`}
+                }`}
         >
             <div className="max-w-7xl mx-auto flex items-center justify-between text-white">
                 {/* Left: Logo */}
                 <div className="font-bold text-lg">
-                    <span>Fariz</span>
-                    <span className="text-violet-300">Dev.</span>
+                    <span>Fariz </span>
+                    <span className="text-primary">Ammar.</span>
                 </div>
 
                 {/* Middle: Navigation */}
@@ -62,11 +66,13 @@ const Navbar = () => {
                         <a
                             key={section}
                             href={`#${section}`}
-                            className={`transition hover:text-primary ${
-                                activeSection === section ? "text-primary" : "text-white/80"
-                            }`}
+                            className={`relative pb-1 transition hover:text-primary ${activeSection === section ? "text-primary" : "text-white/70"
+                                }`}
                         >
                             {section.charAt(0).toUpperCase() + section.slice(1)}
+                            {activeSection === section && (
+                                <span className="absolute left-0 -bottom-0.5 h-[2px] w-full bg-primary rounded-full" />
+                            )}
                         </a>
                     ))}
                 </div>
@@ -76,12 +82,10 @@ const Navbar = () => {
                     <a
                         href="/documents/CV Fariz Ammar 2026 V1.pdf"
                         target="_blank"
-                        className="px-4 py-2 rounded-md text-sm font-semibold transition duration-500 ease-in-out
-              bg-primary text-white
-              dark:bg-white/10 dark:text-white dark:backdrop-blur-md dark:border dark:border-white/20
-              hover:bg-indigo-200 dark:hover:bg-white/20"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-primary text-white hover:bg-primary/90 transition duration-300 shadow-lg shadow-primary/20"
                     >
                         Download CV
+                        <Download className="w-4 h-4" />
                     </a>
                 </div>
             </div>
