@@ -43,7 +43,6 @@ const Navbar = () => {
             },
             {
                 root: null,
-                // Navbar tingginya kira-kira 80px.
                 rootMargin: "-90px 0px -55% 0px",
                 threshold: 0.1,
             },
@@ -105,10 +104,8 @@ const Navbar = () => {
                 : "border-transparent bg-transparent"
                 }`}
         >
-            {/* Container ini harus sama dengan container Hero */}
             <div className="px-6 md:px-12">
                 <div className="mx-auto flex w-full max-w-7xl items-center justify-between py-4">
-                    {/* Logo */}
                     <a
                         href="#home"
                         onClick={(event) => handleNavClick(event, "home")}
@@ -118,7 +115,6 @@ const Navbar = () => {
                         Fariz <span className="text-primary">Ammar.</span>
                     </a>
 
-                    {/* Desktop Navigation */}
                     <nav
                         aria-label="Main navigation"
                         className="hidden items-center gap-8 text-sm font-medium md:flex"
@@ -143,7 +139,6 @@ const Navbar = () => {
                         ))}
                     </nav>
 
-                    {/* Desktop CV */}
                     <div className="hidden items-center md:flex">
                         <a
                             href="/documents/CV Fariz Ammar 2026 V1.pdf"
@@ -156,7 +151,6 @@ const Navbar = () => {
                         </a>
                     </div>
 
-                    {/* Mobile Menu Button */}
                     <button
                         type="button"
                         onClick={() => setIsMobileMenuOpen((open) => !open)}
@@ -171,6 +165,42 @@ const Navbar = () => {
                         )}
                     </button>
                 </div>
+            </div>
+
+            {/* Mobile Navigation Menu */}
+            <div
+                className={`overflow-hidden border-t border-white/10 bg-[#0a0a0f]/95 backdrop-blur-xl transition-all duration-300 md:hidden ${isMobileMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+                    }`}
+            >
+                <nav
+                    aria-label="Mobile navigation"
+                    className="flex flex-col gap-1 px-6 py-4"
+                >
+                    {sections.map((section) => (
+                        <a
+                            key={section}
+                            href={`#${section}`}
+                            onClick={(event) => handleNavClick(event, section)}
+                            className={`rounded-lg px-3 py-2.5 text-sm font-medium transition ${activeSection === section
+                                ? "bg-primary/10 text-primary"
+                                : "text-white/70 hover:bg-white/5 hover:text-primary"
+                                }`}
+                        >
+                            {section.charAt(0).toUpperCase() + section.slice(1)}
+                        </a>
+                    ))}
+
+                    <a
+                        href="/documents/CV Fariz Ammar 2026 V1.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/20 transition hover:bg-primary/90"
+                    >
+                        Download CV
+                        <Download className="h-4 w-4" />
+                    </a>
+                </nav>
             </div>
         </header>
     );
