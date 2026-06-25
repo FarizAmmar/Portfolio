@@ -107,46 +107,20 @@ const HeroSection = () => {
       { opacity: [0, 1], transform: ["translateY(40px)", "translateY(0px)"] },
       { duration: 0.8, delay: stagger(0.15) },
     );
-    const particleEls = document.querySelectorAll(".scroll-particle");
-    let lastScroll = 0;
-    const handleScroll = () => {
-      const now = Date.now();
-      if (now - lastScroll < 100) return;
-      lastScroll = now;
-      particleEls.forEach((el) => {
-        const dx = (Math.random() - 0.5) * 10;
-        const dy = (Math.random() - 0.5) * 10;
-        animate(
-          el,
-          { transform: `translate(${dx}px, ${dy}px)` },
-          { duration: 0.5 },
-        );
-      });
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Starfield dots — generate sekali, ringan (tanpa blur/shadow)
   useEffect(() => {
-    if (typeof window !== "undefined" && window.innerWidth <= 768) return;
-    const colors = [
-      "#ff6b6b",
-      "#6bc1ff",
-      "#a07fff",
-      "#feca57",
-      "#1dd1a1",
-      "#ff9ff3",
-      "#f368e0",
-      "#10ac84",
-    ];
-    const newParticles: Particle[] = [];
-    while (newParticles.length < 8) {
-      newParticles.push({
-        top: Math.random() * 100,
-        left: Math.random() * 100,
-        color: colors[Math.floor(Math.random() * colors.length)],
-      });
-    }
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (prefersReducedMotion) return;
+
+    const newParticles: Particle[] = Array.from({ length: 26 }, () => ({
+      top: Math.random() * 100,
+      left: Math.random() * 100,
+      color: "#ffffff",
+    }));
     setParticles(newParticles);
   }, []);
 
@@ -162,40 +136,46 @@ const HeroSection = () => {
 
   const stats = [
     { icon: Rocket, value: "5+", label: "Years Experience" },
-    { icon: Code2, value: "20+", label: "Projects Completed" },
-    { icon: Users, value: "10+", label: "Happy Clients" },
-    { icon: Trophy, value: "100%", label: "Client Satisfaction" },
+    { icon: Code2, value: "5+", label: "Projects Completed" },
+    { icon: Users, value: "5+", label: "Happy Clients" },
+    { icon: Trophy, value: "87%", label: "Client Satisfaction" },
   ];
 
   return (
     <section
       id="home"
-      className="relative min-h-svh flex flex-col justify-center bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white px-6 md:px-12 py-20 overflow-hidden pt-28"
+      className="relative min-h-svh flex flex-col justify-center bg-[#08070d] text-white px-6 md:px-12 py-20 overflow-hidden pt-28"
     >
-      {/* Particles */}
+      {/* Twinkle animation - pure CSS, jalan di compositor thread, sangat ringan */}
+      <style>{`
+        @keyframes star-twinkle {
+          0%, 100% { opacity: 0.15; }
+          50% { opacity: 0.85; }
+        }
+        .star-dot {
+          animation: star-twinkle ease-in-out infinite;
+        }
+      `}</style>
+
+      {/* Starfield - dot kecil, tanpa blur/shadow, jauh lebih murah dari orb besar */}
       {particles.map((p, i) => (
-        <motion.div
+        <span
           key={i}
-          className="scroll-particle absolute w-24 h-24 rounded-full blur-2xl brightness-100 shadow-[0_0_18px_rgba(255,255,255,0.5)] z-0"
-          initial={{ y: 0, x: 0 }}
-          animate={{ y: [0, -14, 0], x: i % 2 === 0 ? [0, 8, 0] : [0, -8, 0] }}
-          transition={{
-            duration: 4 + Math.random() * 2,
-            repeat: Infinity,
-            repeatType: "loop",
-            ease: "easeInOut",
-          }}
+          className="star-dot absolute rounded-full bg-white pointer-events-none z-0"
           style={{
             top: `${p.top}%`,
             left: `${p.left}%`,
-            backgroundColor: p.color,
+            width: i % 5 === 0 ? "3px" : "2px",
+            height: i % 5 === 0 ? "3px" : "2px",
+            animationDuration: `${3 + (i % 4)}s`,
+            animationDelay: `${(i % 6) * 0.4}s`,
           }}
         />
       ))}
 
-      {/* Glow Background */}
-      <div className="absolute w-[600px] h-[600px] bg-gradient-to-tr from-pink-500 via-purple-500 to-blue-500 blur-[180px] opacity-20 top-0 -left-32 z-0" />
-      <div className="absolute w-[400px] h-[400px] bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600 blur-[160px] opacity-10 bottom-10 right-10 z-0" />
+      {/* Glow statis - tanpa animasi, cuma dirender sekali jadi nggak makan CPU/GPU per frame */}
+      <div className="absolute w-[700px] h-[700px] bg-violet-600/10 blur-[160px] rounded-full -top-40 -left-40 z-0" />
+      <div className="absolute w-[500px] h-[500px] bg-blue-600/10 blur-[160px] rounded-full top-10 -right-20 z-0" />
 
       {/* Main Hero */}
       <div className="relative z-10 max-w-7xl mx-auto grid md:grid-cols-[1.1fr_0.9fr] gap-16 items-center">
@@ -346,7 +326,7 @@ const TechStackSection = () => {
 
   return (
     <section id="skills" className="relative scroll-mt-24 py-16 px-6 md:px-12">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <motion.h2
           className="text-3xl md:text-4xl font-bold text-white mb-3 flex items-center gap-2"
           initial={{ opacity: 0, y: -20 }}
@@ -430,15 +410,9 @@ const projects: Project[] = [
     id: 3,
     title: "E-Commerce Dashboard",
     desc: "Admin dashboard for managing products, orders, customers, and analytics.",
+    img: "/projects/artisan.png",
     href: "#",
     tags: ["Next.js", "TypeScript", "Tailwind CSS"],
-  },
-  {
-    id: 4,
-    title: "Tech Blog Platform",
-    desc: "Blog platform with authentication, markdown editor, and dynamic content.",
-    href: "#",
-    tags: ["Next.js", "MongoDB", "Tailwind CSS"],
   },
 ];
 
@@ -455,7 +429,7 @@ const ProjectSection = () => {
       id="projects"
       className="relative scroll-mt-24 py-16 px-6 md:px-12 bg-gradient-to-b from-transparent to-[#0d0d14]"
     >
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-3xl md:text-4xl font-bold text-white flex items-center gap-2">
             Selected Projects{" "}
@@ -657,7 +631,7 @@ const ExperienceSection = () => {
       id="experience"
       className="relative scroll-mt-24 py-16 px-6 md:px-12"
     >
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-10 flex items-center gap-2">
           Experience <span className="w-2 h-2 rounded-full bg-primary" />
         </h2>
@@ -686,8 +660,8 @@ const ExperienceSection = () => {
                   )}
                   <span
                     className={`hidden sm:inline-block absolute -left-[7px] top-1 w-3 h-3 rounded-full border-2 ${exp.current
-                      ? "bg-primary border-primary"
-                      : "bg-transparent border-white/30"
+                        ? "bg-primary border-primary"
+                        : "bg-transparent border-white/30"
                       }`}
                   />
                 </div>
@@ -766,7 +740,7 @@ const CTASection = () => {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
-        className="max-w-6xl mx-auto bg-gradient-to-r from-primary via-violet-600 to-indigo-600 rounded-2xl px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-6"
+        className="max-w-7xl mx-auto bg-gradient-to-r from-primary via-violet-600 to-indigo-600 rounded-2xl px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-6"
       >
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
@@ -862,7 +836,7 @@ const ContactSection = () => {
       id="contact"
       className="relative scroll-mt-24 py-16 px-6 md:px-12 pb-24"
     >
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-2 flex items-center gap-2">
           Get In Touch <span className="w-2 h-2 rounded-full bg-primary" />
         </h2>
