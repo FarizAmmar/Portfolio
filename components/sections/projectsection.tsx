@@ -44,7 +44,7 @@ const projects: Project[] = [
         title: "E-Commerce Dashboard",
         desc: "Admin dashboard for managing products, orders, customers, and analytics.",
         img: "/projects/artisan.png",
-        href: "#",
+        href: "https://ejpl3p1bmpuc.jp.larksuite.com/app/EIq6bBv6faucwjsfR8NjHcDsprK?from=from_copylink",
         tags: ["Next.js", "TypeScript", "Tailwind CSS"],
     },
 ];
